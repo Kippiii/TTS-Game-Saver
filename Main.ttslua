@@ -8,6 +8,8 @@ ui_ids = {
     confirm = false,
 }
 
+gameName = ''
+
 --An array of all of the pages
 pageList = {
     OpenPage:new(),
@@ -18,8 +20,13 @@ pageList = {
 }
 currentPage = 1
 
+function changeName(player, name)
+    gameName = name
+end
+
 --Changes the page of the UI in a given direction
 function changePage(player, direction)
+    pageList[currentPage]:onLeave()
     if direction == 'next' then
         currentPage = currentPage + 1
         if currentPage > #pageList then currentPage = 1 end
@@ -72,6 +79,26 @@ function pickOutcome(player, value, id)
             myPlayers[page.currentColor].outcome = str
         end
     end
+end
+
+function sendRequest()
+    context = {
+        name = gameName
+    }
+    counter = 0
+    for color, player in pairs(myPlayers) do
+        context['player' .. counter .. '_steam_id'] = player.player.steam_id
+        context['player' .. counter .. '_outcome'] = player.outcome
+        context['player' .. counter .. '_rank_change'] = player.rankChange
+
+        counter = counter + 1
+    end
+
+    function webRequestReturn(webReturn)
+        print(webReturn.text)
+    end
+
+    WebRequest.post('https://tts-online.herokuapp.com/game/', context, webRequestReturn)
 end
 
 --Runs when TTS is loaded

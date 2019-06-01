@@ -148,3 +148,8 @@ ConfirmPage.ids = {
     'confirm',
 }
 ConfirmPage.percentage = 100
+function ConfirmPage.onLeave(this)
+    sendRequest()
+
+    this:superClass().onLeave(this)
+end
