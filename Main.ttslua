@@ -74,6 +74,28 @@ function pickOutcome(player, value, id)
     end
 end
 
+function sendRequest()
+    context = {
+        name = self.UI.getAttribute('game_name', 'text')
+    }
+    counter = 0
+    for color, player in pairs(myPlayers) do
+        context['player' .. counter .. '_steam_id'] = player.player.steam_id
+        context['player' .. counter .. '_outcome'] = player.outcome
+        context['player' .. counter .. '_rank_change'] = player.rankChange
+
+        counter = counter + 1
+    end
+
+    function webRequestReturn(webReturn)
+        for i, j in pairs(webReturn) do
+            print(i .. " = " .. j)
+        end
+    end
+
+    WebRequest.post('https://tts-online.herokuapp.com/game/', context, webRequestReturn)
+end
+
 --Runs when TTS is loaded
 function onLoad(save_state)
     --Ensures that the current UI elements are being shown
