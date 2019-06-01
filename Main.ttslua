@@ -1,0 +1,83 @@
+--The current status of all of the import ids from the XML UI.
+ui_ids = {
+    open_button = true,
+    basics = false,
+    game_name = false,
+    outcomes = false,
+    rank_changes = false,
+    confirm = false,
+}
+
+--An array of all of the pages
+pageList = {
+    OpenPage:new(),
+    NamePage:new(),
+    OutcomePage:new(),
+    RankChangePage:new(),
+    ConfirmPage:new(),
+}
+currentPage = 1
+
+--Changes the page of the UI in a given direction
+function changePage(player, direction)
+    if direction == 'next' then
+        currentPage = currentPage + 1
+        if currentPage > #pageList then currentPage = 1 end
+    else
+        currentPage = currentPage - 1
+        if currentPage < 1 then currentPage = #pageList end
+    end
+    pageList[currentPage]:onLoad()
+end
+
+--Changes the user in the OutcomePage in a given direction
+function changeUser(player, direction)
+    --Finds the outcome page instance
+    page = findPage(OutcomePage)
+
+    --updates the current index
+    if Player.getPlayers()[page.currentIndex].color == page.currentColor then
+        if direction == 'next' then
+            page.currentIndex = page.currentIndex + 1
+            if page.currentIndex > #Player.getPlayers() then page.currentIndex = 1 end
+        elseif direction == 'back' then
+            page.currentIndex = page.currentIndex - 1
+            if page.currentIndex < 1 then page.currentIndex = #Player.getPlayers() end
+        end
+    end
+
+    page:loadPlayer()
+end
+
+--Runs when an outcome is selected within the OutcomePage
+function pickOutcome(player, value, id)
+    if value then
+        --Finds the OutcomePage
+        page = findPage(OutcomePage)
+        myPlayers[page.currentColor]:setOutcome(string.sub(id, 16))
+
+        --Updates MyPlayer information based on selected outcome
+        if id == 'player_outcome_not' then
+            myPlayers[page.currentColor].inGame = false
+        else
+            myPlayers[page.currentColor].inGame = true
+            str = ''
+            if id == 'player_outcome_win' then
+                str = 'W'
+            elseif id == 'player_outcome_tie' then
+                str = 'T'
+            elseif id == 'player_outcome_lose' then
+                str = 'L'
+            end
+            myPlayers[page.currentColor].outcome = str
+        end
+    end
+end
+
+--Runs when TTS is loaded
+function onLoad(save_state)
+    --Ensures that the current UI elements are being shown
+    for id, status in pairs(ui_ids) do
+        self.UI.setAttribute(id, 'active', status)
+    end
+end

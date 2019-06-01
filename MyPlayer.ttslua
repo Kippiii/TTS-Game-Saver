@@ -1,0 +1,37 @@
+--My class for a custom player
+MyPlayer = inherit(nil)
+MyPlayer.color = ''
+MyPlayer.player = '' --TTS Player object
+MyPlayer.inGame = false --Whether this player played the game
+MyPlayer.outcome = '' --The player's outcome as a character
+MyPlayer.rankChange = nil --The amount that the player's rank will change due to this game
+--Should be ran after player is created.
+function MyPlayer.setPlayer(this, color)
+    this.color = color
+    this.player = Player[color]
+end
+--Sets the outcome for this player based on a string.
+--'not' indicates that player did not play
+--'win' indicates that the player won
+--'tie' indicates that the player did not win or lose
+--'lose' indicates that the player lost
+function MyPlayer.setOutcome(this, outcome)
+    if outcome == 'not' then
+        MyPlayer.inGame = false
+    else
+        MyPlayer.inGame = true
+        if outcome == 'win' then
+            this.outcome = 'W'
+            if not this.rankChange then this.rankChange = 1 end
+        elseif outcome == 'tie' then
+            this.outcome = 'T'
+            if not this.rankChange then this.rankChange = 0 end
+        elseif outcome =='lose' then
+            this.outcome = 'L'
+            if not this.rankChange then this.rankChange = -1 end
+        end
+    end
+end
+
+--Array for storing all players
+myPlayers = {}

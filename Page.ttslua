@@ -1,0 +1,150 @@
+--Class for page inheritance
+Page = inherit(nil)
+Page.ids = {} --ids from XML that are shown for this page
+Page.percentage = 0 --Percentage of the progress bar
+--Ran when a page is loaded
+function Page.onLoad(this)
+    --Changes the ids shown in XML based on this.ids
+    local changes = {}
+    for id, status in pairs(ui_ids) do
+        if status then
+            changes[id] = false
+        end
+    end
+    for _, id in ipairs(this.ids) do
+        if not ui_ids[id] then
+            changes[id] = true
+        else
+            changes[id] = nil
+        end
+    end
+    for id, status in pairs(changes) do
+        self.UI.setAttribute(id, 'active', status)
+        ui_ids[id] = status
+    end
+
+    --Changes the progress bar based on this.percentage
+    self.UI.setAttribute('progress_bar', 'percentage', this.percentage)
+end
+function Page.onLeave(this) end
+
+
+--This is the page for into page of the object
+OpenPage = inherit(Page)
+OpenPage.ids = {
+    'open_button',
+}
+
+--This is the page where the name of the game is entered
+NamePage = inherit(Page)
+NamePage.ids = {
+    'basics',
+    'game_name',
+}
+NamePage.percentage = 25
+
+
+--This is the page where the outcome for each player is selected
+OutcomePage = inherit(Page)
+OutcomePage.ids = {
+    'basics',
+    'outcomes',
+}
+OutcomePage.percentage = 50
+OutcomePage.currentIndex = 1 --The index of the current player outcome
+OutcomePage.currentColor = '' --The color of the current player outcome
+function OutcomePage.onLoad(this)
+    --Defaults the selection of player if they list changes
+    if this.currentColor == '' then
+        this.currentColor = Player.getPlayers()[this.currentIndex].color
+    end
+
+    this:loadPlayer()
+
+    this:superClass().onLoad(this)
+end
+--Loads the next player's outcome
+function OutcomePage.loadPlayer(this)
+    --Updates the text for the steam display name
+    self.UI.setAttributes('player_outcome_steam_name', {
+        text = Player[this.currentColor].steam_name,
+        color = this.currentColor,
+    })
+
+    --Ensures that this player has a MyPlayer object
+    if myPlayers[this.currentColor] == nil then
+        myPlayers[this.currentColor] = MyPlayer:new()
+        myPlayers[this.currentColor]:setPlayer(this.currentColor)
+    end
+
+    --Sets the proper button to be toggled on
+    local idList = {
+        player_outcome_not = false,
+        player_outcome_win = false,
+        player_outcome_tie = false,
+        player_outcome_lose = false,
+    }
+    if not myPlayers[this.currentColor].inGame then
+        idList.player_outcome_not = true
+    else
+        if myPlayers[this.currentColor].outcome == 'W' then
+            idList.player_outcome_win = true
+        elseif myPlayers[this.currentColor].outcome == 'T' then
+            idList.player_outcome_tie = true
+        elseif myPlayers[this.currentColor].outcome == 'L' then
+            idList.player_outcome_lose = true
+        end
+    end
+    for id, status in pairs(idList) do
+        self.UI.setAttribute(id, 'isOn', status)
+    end
+end
+
+
+--This is the page that contains all of the rank change values
+RankChangePage = inherit(Page)
+RankChangePage.ids = {
+    'basics',
+    'rank_changes',
+}
+RankChangePage.percentage = 75
+RankChangePage.playerOrder = {} --Array of all players in their proper order
+--Adds a new player to be displayed
+function RankChangePage.addPlayer(this, color)
+    table.insert(this.playerOrder, color)
+    i = #this.playerOrder
+    self.UI.setAttribute('rank_' .. i, 'active', 'true')
+    self.UI.setAttributes('rank_text_' .. i, {
+        color = color,
+        text = color,
+    })
+    self.UI.setAttribute('rank_input_' .. i, 'text', myPlayers[color].rankChange)
+end
+function RankChangePage.onLoad(this)
+    --Checks if there are new players to be displayed
+    for color, player in pairs(myPlayers) do
+        if player.inGame and not isIn(this.playerOrder, color) then
+            this:addPlayer(color)
+        end
+    end
+
+    this:superClass().onLoad(this)
+end
+function RankChangePage.onLeave(this)
+    --Saves the rank change information
+    for i, color in ipairs(this.playerOrder) do
+        myPlayer = myPlayers[color]
+        myPlayer.rankChange = self.UI.getAttribute('rank_input_' .. i, 'text')
+    end
+
+    this:superClass().onLeave(this)
+end
+
+
+--This is the page where the data is sent to the web server from
+ConfirmPage = inherit(Page)
+ConfirmPage.ids = {
+    'basics',
+    'confirm',
+}
+ConfirmPage.percentage = 100

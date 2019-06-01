@@ -1,0 +1,11 @@
+--This game was created by Kippi!
+
+#include Game-Saver/OOP.ttslua
+
+#include Game-Saver/MyPlayer.ttslua
+
+#include Game-Saver/Page.ttslua
+
+#include Game-Saver/Main.ttslua
+
+#include Game-Saver/Utilities.ttslua

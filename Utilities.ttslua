@@ -1,0 +1,32 @@
+--Personal utility: look for a specific page
+function findPage(class)
+    page = {}
+    for _, p in ipairs(pageList) do
+        if p:isa(class) then
+            page = p
+            break
+        end
+    end
+    return page
+end
+
+--Making my own utility function to make up for LUAs lack of functionality
+function toboolean(str)
+    if str == 'true' or str == 'True' then
+        return true
+    elseif str == 'false' or str == 'False' then
+        return false
+    else
+        return nil
+    end
+end
+
+--More making up for LUAs lack of functionality
+function isIn(arr, value)
+    for i, v in ipairs(arr) do
+        if v == value then
+            return true
+        end
+    end
+    return false
+end
