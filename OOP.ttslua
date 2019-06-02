@@ -6,9 +6,14 @@ function inherit(baseClass)
 
     --Default constructor for class
     --TODO Add support for custom constructors
-    function myClass.new(this)
+    function myClass.new(this, args)
         local o = {}
         setmetatable(o, class_mt)
+
+        if myClass.constructor ~= nil then
+            o:constructor(args)
+        end
+
         return o
     end
 

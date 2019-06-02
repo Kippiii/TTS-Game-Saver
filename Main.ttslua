@@ -31,7 +31,7 @@ end
 --Changes the page of the UI in a given direction
 function changePage(player, direction)
     if player.admin then
-        pageList[currentPage]:onLeave()
+        pageList[currentPage]:onLeave(direction)
         if direction == 'next' then
             currentPage = currentPage + 1
             if currentPage > #pageList then currentPage = 1 end
@@ -39,7 +39,7 @@ function changePage(player, direction)
             currentPage = currentPage - 1
             if currentPage < 1 then currentPage = #pageList end
         end
-        pageList[currentPage]:onLoad()
+        pageList[currentPage]:onLoad(direction)
     end
 end
 
