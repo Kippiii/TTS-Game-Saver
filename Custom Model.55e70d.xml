@@ -27,7 +27,7 @@
 </Panel>
 
 <!-- Input field for game selection -->
-<InputField id='game_name' width='1400' height='150' position='0 0 -50' fontsize='100' placeholder='Game Name' active='false' onEndEdit='changeName'></InputField>
+<InputField id='game_name' width='1400' height='150' position='0 0 -50' fontsize='100' placeholder='Game Name' active='false' onValueChanged='changeName'></InputField>
 
 <!-- XML for the outcomes page (Yes, I know it's ugly) -->
 <Panel id='outcomes'>
