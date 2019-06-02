@@ -8,6 +8,8 @@ ui_ids = {
     confirm = false,
 }
 
+gameName = ''
+
 --An array of all of the pages
 pageList = {
     OpenPage:new(),
@@ -18,8 +20,13 @@ pageList = {
 }
 currentPage = 1
 
+function changeName(player, name)
+    gameName = name
+end
+
 --Changes the page of the UI in a given direction
 function changePage(player, direction)
+    pageList[currentPage]:onLeave()
     if direction == 'next' then
         currentPage = currentPage + 1
         if currentPage > #pageList then currentPage = 1 end
@@ -76,7 +83,7 @@ end
 
 function sendRequest()
     context = {
-        name = self.UI.getAttribute('game_name', 'text')
+        name = gameName
     }
     counter = 0
     for color, player in pairs(myPlayers) do
@@ -88,9 +95,7 @@ function sendRequest()
     end
 
     function webRequestReturn(webReturn)
-        for i, j in pairs(webReturn) do
-            print(i .. " = " .. j)
-        end
+        print(webReturn.text)
     end
 
     WebRequest.post('https://tts-online.herokuapp.com/game/', context, webRequestReturn)

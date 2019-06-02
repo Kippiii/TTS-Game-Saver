@@ -21,7 +21,7 @@
     <Button class='change_page' position='450 -325 -50' colors='Green|#11f711|Green|Green' onClick='changePage(next)'>Next</Button>
 </Panel>
 
-<InputField id='game_name' width='1400' height='150' position='0 0 -50' fontsize='100' placeholder='Game Name' active='false'></InputField>
+<InputField id='game_name' width='1400' height='150' position='0 0 -50' fontsize='100' placeholder='Game Name' active='false' onEndEdit='changeName'></InputField>
 
 <Panel id='outcomes'>
     <ToggleGroup width='1400' height='400' position='0 0 -50'>
