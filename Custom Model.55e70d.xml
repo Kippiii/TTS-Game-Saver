@@ -1,28 +1,35 @@
 <Defaults>
-    <Button class='change_page' width='400' height='150' fontSize='100'></Button>
-
+    <!-- Gets rid of the annoying outlines -->
     <TableLayout cellBackgroundColor='clear' />
 
+    <!-- Setting up some buttons -->
+    <Button class='change_page' width='400' height='150' fontSize='100'></Button>
+    <Button class='change_name' width='75' height='75' text='^' fontSize='50' />
+
+    <!-- Defaults related to Outcome page -->
     <ToggleButton width='50' height='50' colors='Grey|Grey|Grey' alignment='MiddleLeft' />
     <Text class='win_condition' textAlignment='MiddleRight' fontSize='50' />
 
-    <Button class='change_name' width='75' height='75' text='^' fontSize='50' />
-
+    <!-- Defaults related to the rank change list page -->
     <TableLayout class='rank_table' columnWidths='500 200' />
     <Text class='rank_color' fontSize='75' textAlignment='MiddleRight' />
     <InputField class='rank_input' width='175' height='90' fontSize='65' placeholder='#' characterValidation='Integer' alignment='MiddleCenter' />
 </Defaults>
 
-<Button active='true' id='open_button' width='800' height='400' textAlignment='MiddleCenter' position='0 0 -50' fontSize='200' onClick='changePage(next)'>Open</Button>
+<!-- Initial page of the object -->
+<Button id='open_button' width='800' height='400' textAlignment='MiddleCenter' position='0 0 -50' fontSize='200' onClick='changePage(next)'>Open</Button>
 
+<!-- Basics page that includes the page change buttons and progress bar -->
 <Panel id='basics'>
     <ProgressBar id='progress_bar' width='1400' height='50' position='0 350 -50' color='White' fillImageColor='Blue' percentage='33' showPercentageText='false' outline='Black'></ProgressBar>
     <Button class='change_page' position='-450 -325 -50' colors='Red|#820a0a|Red|Red' onClick='changePage(back)'>Back</Button>
     <Button class='change_page' position='450 -325 -50' colors='Green|#11f711|Green|Green' onClick='changePage(next)'>Next</Button>
 </Panel>
 
+<!-- Input field for game selection -->
 <InputField id='game_name' width='1400' height='150' position='0 0 -50' fontsize='100' placeholder='Game Name' active='false' onEndEdit='changeName'></InputField>
 
+<!-- XML for the outcomes page (Yes, I know it's ugly) -->
 <Panel id='outcomes'>
     <ToggleGroup width='1400' height='400' position='0 0 -50'>
         <TableLayout columnWidths='100 600 100 600' cellPadding='0 0 25 25'>
@@ -39,6 +46,7 @@
     <Panel position='0 265 -50'><Button class='change_name' position='-575 0 0' rotation='0 0 90' onClick='changeUser(back)' /><Text id='player_outcome_steam_name' fontSize='50' color='White'>XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX</Text><Button class='change_name' position='575 0 0' rotation='0 0 270' onClick='changeUser(next)' /></Panel>
 </Panel>
 
+<!-- XML for the rank change page (Yes, I understand that you shouldn't do this because of DRY or whatever, but I refuse to use the setXML() function) -->
 <GridLayout active='true' id='rank_changes' width='1400' height='500' position='0 40 -50' cellSize='700 100'>
     <TableLayout id='rank_1' class='rank_table' active='false'>
         <Row>
