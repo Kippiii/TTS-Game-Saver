@@ -6,7 +6,8 @@ MyPlayer.inGame = false --Whether this player played the game
 MyPlayer.outcome = '' --The player's outcome as a character
 MyPlayer.rankChange = nil --The amount that the player's rank will change due to this game
 --Should be ran after player is created.
-function MyPlayer.setPlayer(this, color)
+function MyPlayer.constructor(this, args)
+    color = args.color
     this.color = color
     this.player = Player[color]
 end

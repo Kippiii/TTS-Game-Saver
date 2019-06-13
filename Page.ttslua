@@ -73,8 +73,7 @@ function OutcomePage.loadPlayer(this)
 
     --Ensures that this player has a MyPlayer object
     if myPlayers[this.currentColor] == nil then
-        myPlayers[this.currentColor] = MyPlayer:new()
-        myPlayers[this.currentColor]:setPlayer(this.currentColor)
+        myPlayers[this.currentColor] = MyPlayer:new({color = this.currentColor})
     end
 
     --Sets the proper button to be toggled on
@@ -148,8 +147,10 @@ ConfirmPage.ids = {
     'confirm',
 }
 ConfirmPage.percentage = 100
-function ConfirmPage.onLeave(this)
-    sendRequest()
+function ConfirmPage.onLeave(this, direction)
+    if direction == 'next' then
+        sendRequest()
+    end
 
     this:superClass().onLeave(this)
 end

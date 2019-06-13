@@ -20,45 +20,53 @@ pageList = {
 }
 currentPage = 1
 
-function changeName(player, name)
-    gameName = name
+function changeName(player, name, id)
+    if player.admin then
+        gameName = name
+    else
+        self.UI.setAttribute(id, 'text', gameName)
+    end
 end
 
 --Changes the page of the UI in a given direction
 function changePage(player, direction)
-    pageList[currentPage]:onLeave()
-    if direction == 'next' then
-        currentPage = currentPage + 1
-        if currentPage > #pageList then currentPage = 1 end
-    else
-        currentPage = currentPage - 1
-        if currentPage < 1 then currentPage = #pageList end
+    if player.admin then
+        pageList[currentPage]:onLeave(direction)
+        if direction == 'next' then
+            currentPage = currentPage + 1
+            if currentPage > #pageList then currentPage = 1 end
+        else
+            currentPage = currentPage - 1
+            if currentPage < 1 then currentPage = #pageList end
+        end
+        pageList[currentPage]:onLoad(direction)
     end
-    pageList[currentPage]:onLoad()
 end
 
 --Changes the user in the OutcomePage in a given direction
 function changeUser(player, direction)
-    --Finds the outcome page instance
-    page = findPage(OutcomePage)
+    if player.admin then
+        --Finds the outcome page instance
+        page = findPage(OutcomePage)
 
-    --updates the current index
-    if Player.getPlayers()[page.currentIndex].color == page.currentColor then
-        if direction == 'next' then
-            page.currentIndex = page.currentIndex + 1
-            if page.currentIndex > #Player.getPlayers() then page.currentIndex = 1 end
-        elseif direction == 'back' then
-            page.currentIndex = page.currentIndex - 1
-            if page.currentIndex < 1 then page.currentIndex = #Player.getPlayers() end
+        --updates the current index
+        if Player.getPlayers()[page.currentIndex].color == page.currentColor then
+            if direction == 'next' then
+                page.currentIndex = page.currentIndex + 1
+                if page.currentIndex > #Player.getPlayers() then page.currentIndex = 1 end
+            elseif direction == 'back' then
+                page.currentIndex = page.currentIndex - 1
+                if page.currentIndex < 1 then page.currentIndex = #Player.getPlayers() end
+            end
         end
-    end
 
-    page:loadPlayer()
+        page:loadPlayer()
+    end
 end
 
 --Runs when an outcome is selected within the OutcomePage
 function pickOutcome(player, value, id)
-    if value then
+    if player.admin and value then
         --Finds the OutcomePage
         page = findPage(OutcomePage)
         myPlayers[page.currentColor]:setOutcome(string.sub(id, 16))
