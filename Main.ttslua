@@ -101,10 +101,16 @@ function sendRequest()
     WebRequest.post('https://tts-online.herokuapp.com/game/', context, webRequestReturn)
 end
 
---Runs when TTS is loaded
 function onLoad(save_state)
+    onSpawn()
+end
+
+--Runs when Object is spawned
+function onSpawn()
     --Ensures that the current UI elements are being shown
     for id, status in pairs(ui_ids) do
         self.UI.setAttribute(id, 'active', status)
     end
 end
+
+onSpawn()
